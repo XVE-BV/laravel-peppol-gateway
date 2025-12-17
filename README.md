@@ -12,12 +12,6 @@ Laravel client package for the Peppol Gateway API.
 composer require xve/laravel-peppol-gateway
 ```
 
-Publish the config file:
-
-```bash
-php artisan vendor:publish --tag="peppol-gateway-config"
-```
-
 ## Configuration
 
 Add to your `.env`:
@@ -26,6 +20,12 @@ Add to your `.env`:
 PEPPOL_GATEWAY_URL=https://your-gateway-url.com
 PEPPOL_GATEWAY_CLIENT_ID=your-client-id
 PEPPOL_GATEWAY_CLIENT_SECRET=your-client-secret
+```
+
+Optionally publish the config file:
+
+```bash
+php artisan vendor:publish --tag="peppol-gateway-config"
 ```
 
 ## Usage
