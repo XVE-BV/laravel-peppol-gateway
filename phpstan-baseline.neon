@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 4
+			path: config/peppol-gateway.php
+
+		-
+			message: '#^Trait Xve\\LaravelPeppol\\Models\\Concerns\\InteractsWithPeppol is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/Models/Concerns/InteractsWithPeppol.php
