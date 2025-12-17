@@ -104,7 +104,8 @@ class PeppolGatewayService
         }
 
         if ($response->failed()) {
-            throw InvoiceException::sendFailed($response->json('message', 'Unknown error'));
+            $message = $response->json('message') ?? $response->json('error') ?? 'Unknown error';
+            throw InvoiceException::sendFailed(is_string($message) ? $message : json_encode($message));
         }
 
         return $response->json() ?? [];
