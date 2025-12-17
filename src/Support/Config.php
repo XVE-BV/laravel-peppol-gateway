@@ -46,7 +46,7 @@ class Config
 
     public static function getTimeout(): int
     {
-        return (int) config('peppol-gateway.timeout', 30);
+        return (int) (config('peppol-gateway.timeout') ?? 30);
     }
 
     public static function getActionClass(string $actionName): string
