@@ -6,6 +6,14 @@
 
 Laravel client package for the Peppol Gateway API.
 
+## Features
+
+- Health check / ping
+- Customer lookup (VAT to Peppol participant ID)
+- Send invoices (JSON)
+- Send credit notes (JSON)
+- Check invoice/credit note status
+
 ## Installation
 
 ```bash
@@ -30,23 +38,98 @@ php artisan vendor:publish --tag="peppol-gateway-config"
 
 ## Usage
 
+### Health Check
+
 ```php
-use Xve\LaravelPeppol\Facades\Peppol;
+use Xve\LaravelPeppol\Actions\HealthCheckAction;
 
-// Health check
-$health = Peppol::health();
+$action = new HealthCheckAction();
+$health = $action->execute();
 
-// Lookup customer
-$participant = Peppol::lookup('BE0123456789');
+$health->ok;        // true/false
+$health->status;    // 200
+```
 
-// Send invoice
-$result = Peppol::sendInvoice([...]);
+### Customer Lookup
 
-// Send credit note
-$result = Peppol::sendCreditNote([...]);
+```php
+use Xve\LaravelPeppol\Actions\LookupParticipantAction;
 
-// Check status
-$status = Peppol::status($uuid);
+$action = new LookupParticipantAction();
+$participant = $action->execute('BE0123456789');
+
+$participant->participantId;  // "9925:BE0123456789"
+$participant->capable;        // true/false
+```
+
+### Send Invoice
+
+```php
+use Xve\LaravelPeppol\Actions\SendInvoiceAction;
+
+$action = new SendInvoiceAction();
+$result = $action->execute([
+    'type' => 'invoice',
+    'id' => 'INV-2025-001',
+    'issue_date' => '2025-01-15',
+    'due_date' => '2025-02-15',
+    'buyer_vat' => 'BE0123456789',
+    'total' => 121.00,
+    'currency' => 'EUR',
+    'metadata' => [
+        'buyer_name' => 'Acme Corp',
+        'lines' => [
+            [
+                'description' => 'Consulting',
+                'quantity' => 1,
+                'unit_price' => 100.00,
+                'vat_rate' => 21.00,
+            ],
+        ],
+    ],
+]);
+
+$result->status;  // "queued"
+$result->uuid;    // "550e8400-e29b-41d4-a716-446655440000"
+```
+
+### Send Credit Note
+
+```php
+use Xve\LaravelPeppol\Actions\SendCreditNoteAction;
+
+$action = new SendCreditNoteAction();
+$result = $action->execute([
+    'type' => 'credit_note',
+    'total' => -121.00,
+    // ...
+]);
+```
+
+### Check Status
+
+```php
+use Xve\LaravelPeppol\Actions\GetInvoiceStatusAction;
+
+$action = new GetInvoiceStatusAction();
+$status = $action->execute('550e8400-e29b-41d4-a716-446655440000');
+
+$status->status;     // "delivered", "rejected", "failed", etc.
+$status->flowinId;   // External reference
+```
+
+### Model Integration
+
+Add the interface and trait to your model:
+
+```php
+use Xve\LaravelPeppol\Models\Concerns\HasPeppolId;
+use Xve\LaravelPeppol\Models\Concerns\InteractsWithPeppol;
+
+class Customer extends Model implements HasPeppolId
+{
+    use InteractsWithPeppol;
+}
 ```
 
 ## Testing
