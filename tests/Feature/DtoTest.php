@@ -50,33 +50,45 @@ describe('HealthStatus', function () {
 describe('Participant', function () {
     it('creates from response array', function () {
         $data = [
-            'participant_id' => '9925:BE0123456789',
-            'vat' => 'BE0123456789',
-            'capable' => true,
-            'documentTypes' => ['urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'],
-            'metadata' => ['name' => 'Test Company'],
+            'data' => [
+                'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
+                'type' => 'peppolCustomerSearch',
+                'attributes' => [
+                    'customerReference' => '0208:0805374964',
+                    'supportedDocumentFormats' => [
+                        [
+                            'rootNamespace' => 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+                            'localName' => 'Invoice',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $participant = Participant::fromResponse($data);
 
-        expect($participant->participantId)->toBe('9925:BE0123456789')
-            ->and($participant->vat)->toBe('BE0123456789')
+        expect($participant->id)->toBe('8ea99b6a-c891-4f48-964e-208b49a19c93')
+            ->and($participant->participantId)->toBe('0208:0805374964')
             ->and($participant->capable)->toBeTrue()
-            ->and($participant->documentTypes)->toBe(['urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'])
-            ->and($participant->metadata)->toBe(['name' => 'Test Company']);
+            ->and($participant->supportedDocumentFormats)->toHaveCount(1);
     });
 
     it('handles not capable participant', function () {
         $data = [
-            'participant_id' => '',
-            'vat' => 'BE0123456789',
-            'capable' => false,
+            'data' => [
+                'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
+                'type' => 'peppolCustomerSearch',
+                'attributes' => [
+                    'customerReference' => '',
+                    'supportedDocumentFormats' => [],
+                ],
+            ],
         ];
 
         $participant = Participant::fromResponse($data);
 
         expect($participant->capable)->toBeFalse()
-            ->and($participant->documentTypes)->toBe([]);
+            ->and($participant->supportedDocumentFormats)->toBe([]);
     });
 });
 

@@ -18,10 +18,16 @@ beforeEach(function () {
 it('looks up participant successfully', function () {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
-            'participant_id' => '9925:BE0123456789',
-            'vat' => 'BE0123456789',
-            'capable' => true,
-            'documentTypes' => ['urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'],
+            'data' => [
+                'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
+                'type' => 'peppolCustomerSearch',
+                'attributes' => [
+                    'customerReference' => '0208:0805374964',
+                    'supportedDocumentFormats' => [
+                        ['localName' => 'Invoice'],
+                    ],
+                ],
+            ],
         ]),
     ]);
 
@@ -29,16 +35,21 @@ it('looks up participant successfully', function () {
     $result = $action->execute('BE0123456789');
 
     expect($result)->toBeInstanceOf(Participant::class)
-        ->and($result->participantId)->toBe('9925:BE0123456789')
+        ->and($result->participantId)->toBe('0208:0805374964')
         ->and($result->capable)->toBeTrue();
 });
 
 it('sends vat in request body', function () {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
-            'participant_id' => '9925:BE0123456789',
-            'vat' => 'BE0123456789',
-            'capable' => true,
+            'data' => [
+                'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
+                'type' => 'peppolCustomerSearch',
+                'attributes' => [
+                    'customerReference' => '0208:0805374964',
+                    'supportedDocumentFormats' => [],
+                ],
+            ],
         ]),
     ]);
 
@@ -53,9 +64,14 @@ it('sends vat in request body', function () {
 it('includes country when provided', function () {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
-            'participant_id' => '9925:BE0123456789',
-            'vat' => 'BE0123456789',
-            'capable' => true,
+            'data' => [
+                'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
+                'type' => 'peppolCustomerSearch',
+                'attributes' => [
+                    'customerReference' => '0208:0805374964',
+                    'supportedDocumentFormats' => [],
+                ],
+            ],
         ]),
     ]);
 
@@ -71,9 +87,14 @@ it('includes country when provided', function () {
 it('includes force refresh when true', function () {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
-            'participant_id' => '9925:BE0123456789',
-            'vat' => 'BE0123456789',
-            'capable' => true,
+            'data' => [
+                'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
+                'type' => 'peppolCustomerSearch',
+                'attributes' => [
+                    'customerReference' => '0208:0805374964',
+                    'supportedDocumentFormats' => [],
+                ],
+            ],
         ]),
     ]);
 

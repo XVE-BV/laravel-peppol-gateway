@@ -7,21 +7,25 @@ namespace Xve\LaravelPeppol\Support;
 class Participant
 {
     public function __construct(
+        public readonly ?string $id,
         public readonly string $participantId,
-        public readonly string $vat,
         public readonly bool $capable,
-        public readonly array $documentTypes = [],
-        public readonly ?array $metadata = null,
+        public readonly array $supportedDocumentFormats = [],
     ) {}
 
-    public static function fromResponse(array $data): self
+    public static function fromResponse(array $response): self
     {
+        $data = $response['data'] ?? $response;
+        $attributes = $data['attributes'] ?? $data;
+
+        $participantId = $attributes['customerReference'] ?? '';
+        $supportedFormats = $attributes['supportedDocumentFormats'] ?? [];
+
         return new self(
-            participantId: $data['participant_id'] ?? '',
-            vat: $data['vat'] ?? '',
-            capable: $data['capable'] ?? false,
-            documentTypes: $data['documentTypes'] ?? [],
-            metadata: $data['metadata'] ?? null,
+            id: $data['id'] ?? null,
+            participantId: $participantId,
+            capable: ! empty($participantId),
+            supportedDocumentFormats: $supportedFormats,
         );
     }
 }
