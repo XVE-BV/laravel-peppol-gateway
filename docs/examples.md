@@ -28,6 +28,14 @@ $health->error;           // string|null: null
 
 Check if a VAT number is registered on the Peppol network.
 
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `vat` | string | Yes | VAT number (with or without country prefix) |
+| `country` | string | No | Country code hint (e.g. 'BE') |
+| `forceRefresh` | bool | No | Bypass cache (default: false) |
+
 ```php
 use Xve\LaravelPeppol\Actions\LookupParticipantAction;
 use Xve\LaravelPeppol\Support\Config;
@@ -57,38 +65,30 @@ $participant->name;           // string|null: "Acme Corporation"
 
 Send an invoice to the Peppol network.
 
+**Required:** `type`, `total`, `currency`
+
+**Optional:** `id`, `issue_date`, `due_date`, `buyer_vat`, `buyer_peppol_id`, `buyer_reference`, `order_reference`, `lines`, `attachments`, and more.
+
 ```php
 use Xve\LaravelPeppol\Actions\SendInvoiceAction;
 use Xve\LaravelPeppol\Support\Config;
 
 $action = Config::getAction('send_invoice', SendInvoiceAction::class);
 $result = $action->execute([
-    'type' => 'invoice',
+    'type' => 'invoice',           // required
+    'total' => 121.00,             // required
+    'currency' => 'EUR',           // required
     'id' => 'INV-2025-001',
     'issue_date' => '2025-01-15',
     'due_date' => '2025-02-15',
     'buyer_vat' => 'BE0123456789',
-    'total' => 121.00,
-    'currency' => 'EUR',
-    'metadata' => [
-        'buyer_name' => 'Acme Corporation',
-        'buyer_address' => [
-            'street' => 'Main Street 1',
-            'city' => 'Brussels',
-            'postal_code' => '1000',
-            'country' => 'BE',
+    'lines' => [
+        [
+            'description' => 'Consulting services',
+            'quantity' => 10,
+            'unit_price' => 100.00,
+            'vat_rate' => 21.00,
         ],
-        'lines' => [
-            [
-                'description' => 'Consulting services',
-                'quantity' => 10,
-                'unit_price' => 100.00,
-                'vat_rate' => 21.00,
-                'line_total' => 1000.00,
-            ],
-        ],
-        'subtotal' => 1000.00,
-        'vat_total' => 210.00,
     ],
 ]);
 ```
@@ -102,7 +102,9 @@ $result->uuid;    // string: "550e8400-e29b-41d4-a716-446655440000"
 
 ## Send Credit Note
 
-Send a credit note to the Peppol network.
+Send a credit note to the Peppol network. Uses the same schema as invoices.
+
+**Required:** `type`, `total`, `currency`
 
 ```php
 use Xve\LaravelPeppol\Actions\SendCreditNoteAction;
@@ -110,24 +112,19 @@ use Xve\LaravelPeppol\Support\Config;
 
 $action = Config::getAction('send_credit_note', SendCreditNoteAction::class);
 $result = $action->execute([
-    'type' => 'credit_note',
+    'type' => 'credit_note',             // required
+    'total' => -121.00,                  // required
+    'currency' => 'EUR',                 // required
     'id' => 'CN-2025-001',
     'issue_date' => '2025-01-20',
     'buyer_vat' => 'BE0123456789',
-    'total' => -121.00,
-    'currency' => 'EUR',
-    'reference' => 'INV-2025-001',  // Original invoice reference
-    'metadata' => [
-        'buyer_name' => 'Acme Corporation',
-        'reason' => 'Returned goods',
-        'lines' => [
-            [
-                'description' => 'Consulting services - Refund',
-                'quantity' => -1,
-                'unit_price' => 100.00,
-                'vat_rate' => 21.00,
-                'line_total' => -100.00,
-            ],
+    'order_reference' => 'INV-2025-001', // link to original invoice
+    'lines' => [
+        [
+            'description' => 'Consulting services - Refund',
+            'quantity' => -1,
+            'unit_price' => 100.00,
+            'vat_rate' => 21.00,
         ],
     ],
 ]);
@@ -143,6 +140,12 @@ $result->uuid;    // string: "660e8400-e29b-41d4-a716-446655440001"
 ## Get Invoice Status
 
 Check the delivery status of a sent invoice or credit note.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Invoice UUID or numeric ID |
 
 ```php
 use Xve\LaravelPeppol\Actions\GetInvoiceStatusAction;

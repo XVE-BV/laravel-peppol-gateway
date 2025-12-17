@@ -103,11 +103,20 @@ $result = $action->execute($invoiceData);
 
 ### Why Config::getAction()?
 
-The `Config::getAction()` method provides:
+```php
+$action = Config::getAction('send_invoice', SendInvoiceAction::class);
+//                          ↑ config key    ↑ fallback + type guard
+```
 
-1. **Fallback** - Returns the default action if none is configured
-2. **Validation** - Ensures configured class extends the base action
-3. **Type hints** - IDE autocompletion works correctly
+**Flow:**
+
+```
+config has 'send_invoice'?
+  → YES: validate it extends SendInvoiceAction → return new instance
+  → NO:  return new SendInvoiceAction (fallback)
+```
+
+The second parameter serves as both **fallback** (when not configured) and **type guard** (throws `InvalidActionClass` if configured class doesn't extend base).
 
 ### Extending an Action
 

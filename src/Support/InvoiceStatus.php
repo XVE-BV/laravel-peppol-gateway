@@ -19,6 +19,8 @@ class InvoiceStatus
         public readonly ?array $metadata = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
+        public readonly ?string $technicalStatus = null,
+        public readonly ?string $lastUpdated = null,
     ) {}
 
     public static function fromResponse(array $data): self
@@ -38,6 +40,8 @@ class InvoiceStatus
             metadata: $invoice['metadata'] ?? null,
             createdAt: $invoice['created_at'] ?? null,
             updatedAt: $invoice['updated_at'] ?? null,
+            technicalStatus: $invoice['technical_status'] ?? null,
+            lastUpdated: $invoice['last_updated'] ?? null,
         );
     }
 }

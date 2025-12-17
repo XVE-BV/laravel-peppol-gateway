@@ -22,23 +22,7 @@ PEPPOL_GATEWAY_CLIENT_SECRET=your-client-secret
 
 ## Usage
 
-```php
-use Xve\LaravelPeppol\Actions\SendInvoiceAction;
-use Xve\LaravelPeppol\Support\Config;
-
-$action = Config::getAction('send_invoice', SendInvoiceAction::class);
-$result = $action->execute([
-    'type' => 'invoice',
-    'id' => 'INV-2025-001',
-    'buyer_vat' => 'BE0123456789',
-    'total' => 121.00,
-    'currency' => 'EUR',
-    // ...
-]);
-
-$result->status;  // "queued"
-$result->uuid;    // "550e8400-e29b-41d4-a716-446655440000"
-```
+See [Examples](docs/examples.md) for detailed usage.
 
 ### Available Actions
 
@@ -64,14 +48,7 @@ All actions dispatch events after successful execution:
 
 ## Customization
 
-Actions can be swapped via config. See [Action Pattern](docs/action-pattern.md) for details.
-
-```php
-// config/peppol-gateway.php
-'actions' => [
-    'send_invoice' => \App\Actions\CustomSendInvoiceAction::class,
-],
-```
+Actions can be swapped via config. See [Extending an Action](docs/action-pattern.md#extending-an-action) for details.
 
 ## Configuration
 

@@ -12,6 +12,7 @@ class HealthStatus
         public readonly ?string $baseUrl = null,
         public readonly ?bool $mtlsConfigured = null,
         public readonly ?string $error = null,
+        public readonly ?string $hint = null,
     ) {}
 
     public static function fromResponse(array $data): self
@@ -22,6 +23,7 @@ class HealthStatus
             baseUrl: $data['base_url'] ?? null,
             mtlsConfigured: $data['mtls_configured'] ?? null,
             error: $data['error'] ?? null,
+            hint: $data['hint'] ?? null,
         );
     }
 }
