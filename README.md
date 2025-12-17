@@ -13,6 +13,8 @@ Laravel client package for the Peppol Gateway API.
 - Send invoices (JSON)
 - Send credit notes (JSON)
 - Check invoice/credit note status
+- Events for all actions
+- Swappable action classes
 
 ## Installation
 
@@ -42,8 +44,9 @@ php artisan vendor:publish --tag="peppol-gateway-config"
 
 ```php
 use Xve\LaravelPeppol\Actions\HealthCheckAction;
+use Xve\LaravelPeppol\Support\Config;
 
-$action = app(HealthCheckAction::class);
+$action = Config::getAction('health_check', HealthCheckAction::class);
 $health = $action->execute();
 
 $health->ok;        // true/false
@@ -54,8 +57,9 @@ $health->status;    // 200
 
 ```php
 use Xve\LaravelPeppol\Actions\LookupParticipantAction;
+use Xve\LaravelPeppol\Support\Config;
 
-$action = app(LookupParticipantAction::class);
+$action = Config::getAction('lookup_participant', LookupParticipantAction::class);
 $participant = $action->execute('BE0123456789');
 
 $participant->participantId;  // "9925:BE0123456789"
@@ -66,8 +70,9 @@ $participant->capable;        // true/false
 
 ```php
 use Xve\LaravelPeppol\Actions\SendInvoiceAction;
+use Xve\LaravelPeppol\Support\Config;
 
-$action = app(SendInvoiceAction::class);
+$action = Config::getAction('send_invoice', SendInvoiceAction::class);
 $result = $action->execute([
     'type' => 'invoice',
     'id' => 'INV-2025-001',
@@ -97,8 +102,9 @@ $result->uuid;    // "550e8400-e29b-41d4-a716-446655440000"
 
 ```php
 use Xve\LaravelPeppol\Actions\SendCreditNoteAction;
+use Xve\LaravelPeppol\Support\Config;
 
-$action = app(SendCreditNoteAction::class);
+$action = Config::getAction('send_credit_note', SendCreditNoteAction::class);
 $result = $action->execute([
     'type' => 'credit_note',
     'total' => -121.00,
@@ -110,15 +116,67 @@ $result = $action->execute([
 
 ```php
 use Xve\LaravelPeppol\Actions\GetInvoiceStatusAction;
+use Xve\LaravelPeppol\Support\Config;
 
-$action = app(GetInvoiceStatusAction::class);
+$action = Config::getAction('get_invoice_status', GetInvoiceStatusAction::class);
 $status = $action->execute('550e8400-e29b-41d4-a716-446655440000');
 
 $status->status;     // "delivered", "rejected", "failed", etc.
 $status->flowinId;   // External reference
 ```
 
-### Model Integration
+## Events
+
+All actions dispatch events after successful execution:
+
+| Action | Event |
+|--------|-------|
+| `HealthCheckAction` | `HealthChecked` |
+| `LookupParticipantAction` | `ParticipantLookedUp` |
+| `SendInvoiceAction` | `InvoiceSent` |
+| `SendCreditNoteAction` | `CreditNoteSent` |
+| `GetInvoiceStatusAction` | `InvoiceStatusRetrieved` |
+
+Listen to events in your `EventServiceProvider`:
+
+```php
+use Xve\LaravelPeppol\Events\InvoiceSent;
+
+protected $listen = [
+    InvoiceSent::class => [
+        YourInvoiceSentListener::class,
+    ],
+];
+```
+
+## Customizing Actions
+
+You can swap action implementations by extending the base action and updating the config:
+
+```php
+// app/Actions/CustomHealthCheckAction.php
+use Xve\LaravelPeppol\Actions\HealthCheckAction;
+
+class CustomHealthCheckAction extends HealthCheckAction
+{
+    public function execute(): HealthStatus
+    {
+        // Custom logic before
+        $result = parent::execute();
+        // Custom logic after
+        return $result;
+    }
+}
+```
+
+```php
+// config/peppol-gateway.php
+'actions' => [
+    'health_check' => \App\Actions\CustomHealthCheckAction::class,
+],
+```
+
+## Model Integration
 
 Add the interface and trait to your model:
 
