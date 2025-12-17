@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Xve\LaravelPeppol\Actions;
 
+use Xve\LaravelPeppol\Events\ParticipantLookedUp;
 use Xve\LaravelPeppol\Exceptions\AuthenticationException;
 use Xve\LaravelPeppol\Exceptions\ConnectionException;
 use Xve\LaravelPeppol\Exceptions\ValidationException;
@@ -38,7 +39,11 @@ class LookupParticipantAction
                 throw ValidationException::fromResponse($response->json('errors', []));
             }
 
-            return Participant::fromResponse($response->json());
+            $participant = Participant::fromResponse($response->json());
+
+            ParticipantLookedUp::dispatch($vat, $participant);
+
+            return $participant;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             throw ConnectionException::unreachable();
         }

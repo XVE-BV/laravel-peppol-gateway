@@ -11,6 +11,7 @@ All notable changes to `laravel-peppol-gateway` will be documented in this file.
 - Send invoice action (JSON format)
 - Send credit note action (JSON format)
 - Get invoice status action
+- Events for all actions (HealthChecked, ParticipantLookedUp, InvoiceSent, CreditNoteSent, InvoiceStatusRetrieved)
 - DTOs for API responses (HealthStatus, Participant, InvoiceResult, InvoiceStatus)
 - Custom exceptions with factory methods (AuthenticationException, ConnectionException, ValidationException, InvoiceException)
 - Config helper class with HTTP client factory

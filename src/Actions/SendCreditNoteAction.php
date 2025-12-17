@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Xve\LaravelPeppol\Actions;
 
+use Xve\LaravelPeppol\Events\CreditNoteSent;
 use Xve\LaravelPeppol\Exceptions\AuthenticationException;
 use Xve\LaravelPeppol\Exceptions\ConnectionException;
 use Xve\LaravelPeppol\Exceptions\InvoiceException;
@@ -30,7 +31,11 @@ class SendCreditNoteAction
                 throw InvoiceException::sendFailed($response->json('message', 'Unknown error'));
             }
 
-            return InvoiceResult::fromResponse($response->json());
+            $result = InvoiceResult::fromResponse($response->json());
+
+            CreditNoteSent::dispatch($data, $result);
+
+            return $result;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             throw ConnectionException::unreachable();
         }
