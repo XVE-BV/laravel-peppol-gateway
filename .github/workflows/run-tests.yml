@@ -58,3 +58,7 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest --ci
+        env:
+          PEPPOL_GATEWAY_URL: ${{ secrets.PEPPOL_GATEWAY_URL }}
+          PEPPOL_GATEWAY_CLIENT_ID: ${{ secrets.PEPPOL_GATEWAY_CLIENT_ID }}
+          PEPPOL_GATEWAY_CLIENT_SECRET: ${{ secrets.PEPPOL_GATEWAY_CLIENT_SECRET }}

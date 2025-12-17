@@ -19,8 +19,8 @@ class TestCase extends Orchestra
     protected function defineEnvironment($app): void
     {
         $app['config']->set('database.default', 'testing');
-        $app['config']->set('peppol-gateway.base_url', 'https://test-gateway.example.com');
-        $app['config']->set('peppol-gateway.client_id', 'test-client-id');
-        $app['config']->set('peppol-gateway.client_secret', 'test-client-secret');
+        $app['config']->set('peppol-gateway.base_url', env('PEPPOL_GATEWAY_URL', 'https://test-gateway.example.com'));
+        $app['config']->set('peppol-gateway.client_id', env('PEPPOL_GATEWAY_CLIENT_ID', 'test-client-id'));
+        $app['config']->set('peppol-gateway.client_secret', env('PEPPOL_GATEWAY_CLIENT_SECRET', 'test-client-secret'));
     }
 }
