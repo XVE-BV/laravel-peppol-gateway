@@ -41,14 +41,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Xve\\LaravelPeppol\\": "src/",
-            "Xve\\LaravelPeppol\\Database\\Factories\\": "database/factories/"
+            "Xve\\LaravelPeppol\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Xve\\LaravelPeppol\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Xve\\LaravelPeppol\\Tests\\": "tests/"
         }
     },
     "scripts": {
