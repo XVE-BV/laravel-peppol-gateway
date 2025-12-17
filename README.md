@@ -4,7 +4,7 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/xve/laravel-peppol-gateway/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/xve/laravel-peppol-gateway/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/xve/laravel-peppol-gateway.svg?style=flat-square)](https://packagist.org/packages/xve/laravel-peppol-gateway)
 
-Laravel client package for the Peppol Gateway API. Uses the [Action Pattern](docs/action-pattern.md) for swappable, testable operations.
+Laravel client package for the Peppol Gateway API. Uses the [Action Pattern](docs/action-pattern.md) for swappable, testable operations. See [Examples](docs/examples.md) for detailed usage.
 
 ## Installation
 
