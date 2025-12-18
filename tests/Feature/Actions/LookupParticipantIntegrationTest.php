@@ -41,4 +41,3 @@ it('looks up Belgian participant with dots and lowercase prefix', function () {
         ->and($result->participantId)->not->toBeEmpty()
         ->and($result->capable)->toBeTrue();
 });
-
