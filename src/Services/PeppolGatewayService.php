@@ -65,11 +65,6 @@ class PeppolGatewayService
         return $this->post('/api/credit-notes/json', $data);
     }
 
-    public function getInvoice(string $id): array
-    {
-        return $this->get("/api/invoices/{$id}");
-    }
-
     public function getInvoiceStatus(string $id): array
     {
         return $this->get("/api/invoices/{$id}/status");
