@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Xve\LaravelPeppol\Actions\GetCreditNoteStatusAction;
 use Xve\LaravelPeppol\Actions\GetInvoiceStatusAction;
 use Xve\LaravelPeppol\Actions\HealthCheckAction;
 use Xve\LaravelPeppol\Actions\LookupParticipantAction;
@@ -40,6 +41,7 @@ return [
         'send_invoice' => SendInvoiceAction::class,
         'send_credit_note' => SendCreditNoteAction::class,
         'get_invoice_status' => GetInvoiceStatusAction::class,
+        'get_credit_note_status' => GetCreditNoteStatusAction::class,
     ],
 
 ];

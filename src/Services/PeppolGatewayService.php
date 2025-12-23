@@ -70,6 +70,11 @@ class PeppolGatewayService
         return $this->get("/api/invoices/{$id}/status");
     }
 
+    public function getCreditNoteStatus(string $id): array
+    {
+        return $this->get("/api/invoices/{$id}/status");
+    }
+
     protected function get(string $endpoint): array
     {
         try {
