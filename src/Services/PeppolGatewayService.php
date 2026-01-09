@@ -75,6 +75,11 @@ class PeppolGatewayService
         return $this->get("/api/invoices/{$id}/status");
     }
 
+    public function getInvoiceStatusByNumber(string $invoiceNumber): array
+    {
+        return $this->get("/api/invoices/by-number/{$invoiceNumber}/status");
+    }
+
     protected function get(string $endpoint): array
     {
         try {
