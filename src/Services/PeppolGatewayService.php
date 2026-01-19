@@ -82,7 +82,7 @@ class PeppolGatewayService
 
     public function getInvoiceXmlByNumber(string $invoiceNumber): string
     {
-        return $this->getRaw("/api/invoices/by-number/{$invoiceNumber}/xml");
+        return $this->getRaw("/api/invoices/by-number/{$invoiceNumber}/xml", $invoiceNumber);
     }
 
     protected function get(string $endpoint): array
@@ -96,7 +96,7 @@ class PeppolGatewayService
         }
     }
 
-    protected function getRaw(string $endpoint): string
+    protected function getRaw(string $endpoint, ?string $identifier = null): string
     {
         try {
             $response = $this->xmlClient()->get($endpoint);
@@ -106,7 +106,7 @@ class PeppolGatewayService
             }
 
             if ($response->status() === 404) {
-                throw InvoiceException::notFound($endpoint);
+                throw InvoiceException::notFound($identifier ?? $endpoint);
             }
 
             if ($response->failed()) {
