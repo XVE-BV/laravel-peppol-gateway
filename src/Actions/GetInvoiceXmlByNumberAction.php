@@ -16,8 +16,9 @@ class GetInvoiceXmlByNumberAction
     /**
      * Fetch the Peppol UBL XML for an invoice by its number.
      *
-     * @param string $invoiceNumber The invoice number
+     * @param  string  $invoiceNumber  The invoice number
      * @return string The raw XML content
+     *
      * @throws InvoiceException When the invoice is not found or fetch fails
      */
     public function execute(string $invoiceNumber): string

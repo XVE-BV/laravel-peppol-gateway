@@ -110,7 +110,7 @@ class PeppolGatewayService
             }
 
             if ($response->failed()) {
-                $message = 'Failed to fetch XML: HTTP ' . $response->status();
+                $message = 'Failed to fetch XML: HTTP '.$response->status();
                 throw InvoiceException::sendFailed($message);
             }
 
