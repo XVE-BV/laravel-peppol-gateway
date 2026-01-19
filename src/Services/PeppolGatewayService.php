@@ -80,12 +80,41 @@ class PeppolGatewayService
         return $this->get("/api/invoices/by-number/{$invoiceNumber}/status");
     }
 
+    public function getInvoiceXmlByNumber(string $invoiceNumber): string
+    {
+        return $this->getRaw("/api/invoices/by-number/{$invoiceNumber}/xml");
+    }
+
     protected function get(string $endpoint): array
     {
         try {
             $response = $this->client()->get($endpoint);
 
             return $this->handleResponse($response);
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            throw ConnectionException::unreachable();
+        }
+    }
+
+    protected function getRaw(string $endpoint): string
+    {
+        try {
+            $response = $this->xmlClient()->get($endpoint);
+
+            if ($response->status() === 401) {
+                throw AuthenticationException::invalidCredentials();
+            }
+
+            if ($response->status() === 404) {
+                throw InvoiceException::notFound($endpoint);
+            }
+
+            if ($response->failed()) {
+                $message = 'Failed to fetch XML: HTTP ' . $response->status();
+                throw InvoiceException::sendFailed($message);
+            }
+
+            return $response->body();
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             throw ConnectionException::unreachable();
         }
@@ -133,6 +162,17 @@ class PeppolGatewayService
                 'Authorization' => 'Bearer '.$this->clientSecret,
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
+            ]);
+    }
+
+    protected function xmlClient(): PendingRequest
+    {
+        return Http::baseUrl($this->baseUrl)
+            ->timeout($this->timeout)
+            ->withHeaders([
+                'X-Api-Client-Id' => $this->clientId,
+                'Authorization' => 'Bearer '.$this->clientSecret,
+                'Accept' => 'application/xml',
             ]);
     }
 }

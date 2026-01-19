@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Xve\LaravelPeppol\Actions\GetCreditNoteStatusAction;
 use Xve\LaravelPeppol\Actions\GetInvoiceStatusAction;
+use Xve\LaravelPeppol\Actions\GetInvoiceStatusByNumberAction;
+use Xve\LaravelPeppol\Actions\GetInvoiceXmlByNumberAction;
 use Xve\LaravelPeppol\Actions\HealthCheckAction;
 use Xve\LaravelPeppol\Actions\LookupParticipantAction;
 use Xve\LaravelPeppol\Actions\SendCreditNoteAction;
@@ -42,6 +44,8 @@ return [
         'send_credit_note' => SendCreditNoteAction::class,
         'get_invoice_status' => GetInvoiceStatusAction::class,
         'get_credit_note_status' => GetCreditNoteStatusAction::class,
+        'get_invoice_status_by_number' => GetInvoiceStatusByNumberAction::class,
+        'get_invoice_xml_by_number' => GetInvoiceXmlByNumberAction::class,
     ],
 
 ];
