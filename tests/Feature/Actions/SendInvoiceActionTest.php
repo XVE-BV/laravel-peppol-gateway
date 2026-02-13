@@ -59,7 +59,7 @@ it('sends invoice data in request body', function (): void {
     $action = app(SendInvoiceAction::class);
     $action->execute($invoiceData);
 
-    Http::assertSent(fn (array $request): bool => $request['type'] === 'invoice'
+    Http::assertSent(fn ($request): bool => $request['type'] === 'invoice'
         && $request['id'] === 'INV-001'
         && $request['total'] === 121.00
         && $request['buyer_vat'] === 'BE0123456789');

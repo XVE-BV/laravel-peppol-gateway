@@ -56,7 +56,7 @@ it('sends vat in request body', function (): void {
     $action = app(LookupParticipantAction::class);
     $action->execute('BE0123456789');
 
-    Http::assertSent(fn (array $request): bool => $request['vat'] === 'BE0123456789');
+    Http::assertSent(fn ($request): bool => $request['vat'] === 'BE0123456789');
 });
 
 it('includes country when provided', function (): void {
@@ -76,7 +76,7 @@ it('includes country when provided', function (): void {
     $action = app(LookupParticipantAction::class);
     $action->execute('0123456789', 'BE');
 
-    Http::assertSent(fn (array $request): bool => $request['vat'] === '0123456789'
+    Http::assertSent(fn ($request): bool => $request['vat'] === '0123456789'
         && $request['country'] === 'BE');
 });
 
@@ -97,7 +97,7 @@ it('includes force refresh when true', function (): void {
     $action = app(LookupParticipantAction::class);
     $action->execute('BE0123456789', forceRefresh: true);
 
-    Http::assertSent(fn (array $request): bool => $request['force_refresh'] === true);
+    Http::assertSent(fn ($request): bool => $request['force_refresh'] === true);
 });
 
 it('throws authentication exception on 401', function (): void {

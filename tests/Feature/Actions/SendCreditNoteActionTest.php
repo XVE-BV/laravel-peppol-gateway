@@ -51,7 +51,7 @@ it('sends credit note data to correct endpoint', function (): void {
         'currency' => 'EUR',
     ]);
 
-    Http::assertSent(fn (array $request): bool => str_contains($request->url(), '/api/credit-notes/json')
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), '/api/credit-notes/json')
         && $request['type'] === 'credit_note'
         && $request['total'] === -121.00);
 });
