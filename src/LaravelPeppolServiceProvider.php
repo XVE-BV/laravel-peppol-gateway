@@ -20,14 +20,12 @@ class LaravelPeppolServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(PeppolGatewayService::class, function () {
-            return new PeppolGatewayService(
-                baseUrl: Config::getBaseUrl(),
-                clientId: Config::getClientId(),
-                clientSecret: Config::getClientSecret(),
-                timeout: Config::getTimeout(),
-            );
-        });
+        $this->app->singleton(PeppolGatewayService::class, fn (): \Xve\LaravelPeppol\Services\PeppolGatewayService => new PeppolGatewayService(
+            baseUrl: Config::getBaseUrl(),
+            clientId: Config::getClientId(),
+            clientSecret: Config::getClientSecret(),
+            timeout: Config::getTimeout(),
+        ));
     }
 
     public function packageBooted(): void

@@ -32,7 +32,7 @@ class PeppolGatewayService
 
             // Health check returns valid responses even on 5xx (unhealthy status)
             return $response->json() ?? [];
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException) {
             throw ConnectionException::unreachable();
         }
     }
@@ -67,22 +67,22 @@ class PeppolGatewayService
 
     public function getInvoiceStatus(string $id): array
     {
-        return $this->get("/api/invoices/{$id}/status");
+        return $this->get(sprintf('/api/invoices/%s/status', $id));
     }
 
     public function getCreditNoteStatus(string $id): array
     {
-        return $this->get("/api/invoices/{$id}/status");
+        return $this->get(sprintf('/api/invoices/%s/status', $id));
     }
 
     public function getInvoiceStatusByNumber(string $invoiceNumber): array
     {
-        return $this->get("/api/invoices/by-number/{$invoiceNumber}/status");
+        return $this->get(sprintf('/api/invoices/by-number/%s/status', $invoiceNumber));
     }
 
     public function getInvoiceXmlByNumber(string $invoiceNumber): string
     {
-        return $this->getRaw("/api/invoices/by-number/{$invoiceNumber}/xml", $invoiceNumber);
+        return $this->getRaw(sprintf('/api/invoices/by-number/%s/xml', $invoiceNumber), $invoiceNumber);
     }
 
     protected function get(string $endpoint): array
@@ -91,7 +91,7 @@ class PeppolGatewayService
             $response = $this->client()->get($endpoint);
 
             return $this->handleResponse($response);
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException) {
             throw ConnectionException::unreachable();
         }
     }
@@ -115,7 +115,7 @@ class PeppolGatewayService
             }
 
             return $response->body();
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException) {
             throw ConnectionException::unreachable();
         }
     }
@@ -126,7 +126,7 @@ class PeppolGatewayService
             $response = $this->client()->post($endpoint, $data);
 
             return $this->handleResponse($response);
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException) {
             throw ConnectionException::unreachable();
         }
     }

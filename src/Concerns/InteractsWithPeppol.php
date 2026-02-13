@@ -69,7 +69,7 @@ trait InteractsWithPeppol
      */
     public function scopeHasPeppolId(Builder $query): Builder
     {
-        return $query->where(function (Builder $q) {
+        return $query->where(function (Builder $q): void {
             $q->whereNotNull('peppol_id')
                 ->orWhereNotNull('peppol_custom_set_id');
         });

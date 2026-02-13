@@ -8,6 +8,6 @@ class InvalidActionClass extends PeppolGatewayException
 {
     public static function make(string $actionName, string $expectedClass, string $actualClass): self
     {
-        return new self("Action '{$actionName}' must be an instance of {$expectedClass}, but {$actualClass} was configured.");
+        return new self(sprintf("Action '%s' must be an instance of %s, but %s was configured.", $actionName, $expectedClass, $actualClass));
     }
 }

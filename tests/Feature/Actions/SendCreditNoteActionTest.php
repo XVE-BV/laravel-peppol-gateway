@@ -8,13 +8,13 @@ use Xve\LaravelPeppol\Exceptions\AuthenticationException;
 use Xve\LaravelPeppol\Exceptions\ValidationException;
 use Xve\LaravelPeppol\Support\InvoiceResult;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('peppol-gateway.base_url', 'https://api.example.com');
     config()->set('peppol-gateway.client_id', 'test-client');
     config()->set('peppol-gateway.client_secret', 'test-secret');
 });
 
-it('sends credit note successfully', function () {
+it('sends credit note successfully', function (): void {
     Http::fake([
         'api.example.com/api/credit-notes/json' => Http::response([
             'status' => 'queued',
@@ -36,7 +36,7 @@ it('sends credit note successfully', function () {
         ->and($result->uuid)->toBe('550e8400-e29b-41d4-a716-446655440000');
 });
 
-it('sends credit note data to correct endpoint', function () {
+it('sends credit note data to correct endpoint', function (): void {
     Http::fake([
         'api.example.com/api/credit-notes/json' => Http::response([
             'status' => 'queued',
@@ -51,14 +51,12 @@ it('sends credit note data to correct endpoint', function () {
         'currency' => 'EUR',
     ]);
 
-    Http::assertSent(function ($request) {
-        return str_contains($request->url(), '/api/credit-notes/json')
-            && $request['type'] === 'credit_note'
-            && $request['total'] === -121.00;
-    });
+    Http::assertSent(fn (array $request): bool => str_contains($request->url(), '/api/credit-notes/json')
+        && $request['type'] === 'credit_note'
+        && $request['total'] === -121.00);
 });
 
-it('throws authentication exception on 401', function () {
+it('throws authentication exception on 401', function (): void {
     Http::fake([
         'api.example.com/api/credit-notes/json' => Http::response(['message' => 'Unauthorized'], 401),
     ]);
@@ -67,7 +65,7 @@ it('throws authentication exception on 401', function () {
     $action->execute(['type' => 'credit_note', 'total' => -100, 'currency' => 'EUR']);
 })->throws(AuthenticationException::class);
 
-it('throws validation exception on 422', function () {
+it('throws validation exception on 422', function (): void {
     Http::fake([
         'api.example.com/api/credit-notes/json' => Http::response([
             'message' => 'Validation failed',

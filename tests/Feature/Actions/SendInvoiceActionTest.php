@@ -9,13 +9,13 @@ use Xve\LaravelPeppol\Exceptions\InvoiceException;
 use Xve\LaravelPeppol\Exceptions\ValidationException;
 use Xve\LaravelPeppol\Support\InvoiceResult;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('peppol-gateway.base_url', 'https://api.example.com');
     config()->set('peppol-gateway.client_id', 'test-client');
     config()->set('peppol-gateway.client_secret', 'test-secret');
 });
 
-it('sends invoice successfully', function () {
+it('sends invoice successfully', function (): void {
     Http::fake([
         'api.example.com/api/invoices/json' => Http::response([
             'status' => 'queued',
@@ -37,7 +37,7 @@ it('sends invoice successfully', function () {
         ->and($result->uuid)->toBe('550e8400-e29b-41d4-a716-446655440000');
 });
 
-it('sends invoice data in request body', function () {
+it('sends invoice data in request body', function (): void {
     Http::fake([
         'api.example.com/api/invoices/json' => Http::response([
             'status' => 'queued',
@@ -59,15 +59,13 @@ it('sends invoice data in request body', function () {
     $action = app(SendInvoiceAction::class);
     $action->execute($invoiceData);
 
-    Http::assertSent(function ($request) {
-        return $request['type'] === 'invoice'
-            && $request['id'] === 'INV-001'
-            && $request['total'] === 121.00
-            && $request['buyer_vat'] === 'BE0123456789';
-    });
+    Http::assertSent(fn (array $request): bool => $request['type'] === 'invoice'
+        && $request['id'] === 'INV-001'
+        && $request['total'] === 121.00
+        && $request['buyer_vat'] === 'BE0123456789');
 });
 
-it('throws authentication exception on 401', function () {
+it('throws authentication exception on 401', function (): void {
     Http::fake([
         'api.example.com/api/invoices/json' => Http::response(['message' => 'Unauthorized'], 401),
     ]);
@@ -76,7 +74,7 @@ it('throws authentication exception on 401', function () {
     $action->execute(['type' => 'invoice', 'total' => 100, 'currency' => 'EUR']);
 })->throws(AuthenticationException::class);
 
-it('throws validation exception on 422', function () {
+it('throws validation exception on 422', function (): void {
     Http::fake([
         'api.example.com/api/invoices/json' => Http::response([
             'message' => 'Validation failed',
@@ -88,7 +86,7 @@ it('throws validation exception on 422', function () {
     $action->execute([]);
 })->throws(ValidationException::class);
 
-it('throws invoice exception on other failures', function () {
+it('throws invoice exception on other failures', function (): void {
     Http::fake([
         'api.example.com/api/invoices/json' => Http::response([
             'message' => 'Internal server error',

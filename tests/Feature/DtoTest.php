@@ -7,8 +7,8 @@ use Xve\LaravelPeppol\Support\InvoiceResult;
 use Xve\LaravelPeppol\Support\InvoiceStatus;
 use Xve\LaravelPeppol\Support\Participant;
 
-describe('HealthStatus', function () {
-    it('creates from response array', function () {
+describe('HealthStatus', function (): void {
+    it('creates from response array', function (): void {
         $data = [
             'ok' => true,
             'status' => 200,
@@ -25,7 +25,7 @@ describe('HealthStatus', function () {
             ->and($health->error)->toBeNull();
     });
 
-    it('handles error response', function () {
+    it('handles error response', function (): void {
         $data = [
             'ok' => false,
             'status' => 502,
@@ -39,7 +39,7 @@ describe('HealthStatus', function () {
             ->and($health->error)->toBe('Connection failed');
     });
 
-    it('handles empty response', function () {
+    it('handles empty response', function (): void {
         $health = HealthStatus::fromResponse([]);
 
         expect($health->ok)->toBeFalse()
@@ -47,8 +47,8 @@ describe('HealthStatus', function () {
     });
 });
 
-describe('Participant', function () {
-    it('creates from response array', function () {
+describe('Participant', function (): void {
+    it('creates from response array', function (): void {
         $data = [
             'data' => [
                 'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
@@ -73,7 +73,7 @@ describe('Participant', function () {
             ->and($participant->supportedDocumentFormats)->toHaveCount(1);
     });
 
-    it('handles not capable participant', function () {
+    it('handles not capable participant', function (): void {
         $data = [
             'data' => [
                 'id' => '8ea99b6a-c891-4f48-964e-208b49a19c93',
@@ -92,8 +92,8 @@ describe('Participant', function () {
     });
 });
 
-describe('InvoiceResult', function () {
-    it('creates from response array', function () {
+describe('InvoiceResult', function (): void {
+    it('creates from response array', function (): void {
         $data = [
             'status' => 'queued',
             'uuid' => '550e8400-e29b-41d4-a716-446655440000',
@@ -106,8 +106,8 @@ describe('InvoiceResult', function () {
     });
 });
 
-describe('InvoiceStatus', function () {
-    it('creates from response array with invoice wrapper', function () {
+describe('InvoiceStatus', function (): void {
+    it('creates from response array with invoice wrapper', function (): void {
         $data = [
             'invoice' => [
                 'id' => 1,
@@ -136,7 +136,7 @@ describe('InvoiceStatus', function () {
             ->and($status->currency)->toBe('EUR');
     });
 
-    it('creates from flat response array', function () {
+    it('creates from flat response array', function (): void {
         $data = [
             'id' => 1,
             'uuid' => '550e8400-e29b-41d4-a716-446655440000',

@@ -9,13 +9,13 @@ use Xve\LaravelPeppol\Exceptions\ConnectionException;
 use Xve\LaravelPeppol\Exceptions\InvoiceException;
 use Xve\LaravelPeppol\Support\InvoiceStatus;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('peppol-gateway.base_url', 'https://api.example.com');
     config()->set('peppol-gateway.client_id', 'test-client');
     config()->set('peppol-gateway.client_secret', 'test-secret');
 });
 
-it('gets invoice status successfully', function () {
+it('gets invoice status successfully', function (): void {
     Http::fake([
         'api.example.com/api/invoices/550e8400-e29b-41d4-a716-446655440000/status' => Http::response([
             'invoice' => [
@@ -40,7 +40,7 @@ it('gets invoice status successfully', function () {
         ->and($result->flowinId)->toBe('FLOWIN-123');
 });
 
-it('gets invoice status with numeric id', function () {
+it('gets invoice status with numeric id', function (): void {
     Http::fake([
         'api.example.com/api/invoices/123/status' => Http::response([
             'invoice' => [
@@ -59,7 +59,7 @@ it('gets invoice status with numeric id', function () {
         ->and($result->status)->toBe('submitted');
 });
 
-it('throws invoice exception on 404', function () {
+it('throws invoice exception on 404', function (): void {
     Http::fake([
         'api.example.com/api/invoices/nonexistent/status' => Http::response([
             'status' => 'not_found',
@@ -70,7 +70,7 @@ it('throws invoice exception on 404', function () {
     $action->execute('nonexistent');
 })->throws(InvoiceException::class, "Invoice with ID 'nonexistent' was not found");
 
-it('throws authentication exception on 401', function () {
+it('throws authentication exception on 401', function (): void {
     Http::fake([
         'api.example.com/api/invoices/123/status' => Http::response(['message' => 'Unauthorized'], 401),
     ]);
@@ -79,14 +79,14 @@ it('throws authentication exception on 401', function () {
     $action->execute('123');
 })->throws(AuthenticationException::class);
 
-it('throws connection exception on network failure', function () {
+it('throws connection exception on network failure', function (): void {
     Http::fake(fn () => throw new \Illuminate\Http\Client\ConnectionException('Timeout'));
 
     $action = app(GetInvoiceStatusAction::class);
     $action->execute('123');
 })->throws(ConnectionException::class);
 
-it('handles different invoice statuses', function (string $status) {
+it('handles different invoice statuses', function (string $status): void {
     Http::fake([
         'api.example.com/api/invoices/123/status' => Http::response([
             'invoice' => [

@@ -7,13 +7,13 @@ use Xve\LaravelPeppol\Actions\HealthCheckAction;
 use Xve\LaravelPeppol\Exceptions\ConnectionException;
 use Xve\LaravelPeppol\Support\HealthStatus;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('peppol-gateway.base_url', 'https://api.example.com');
     config()->set('peppol-gateway.client_id', 'test-client');
     config()->set('peppol-gateway.client_secret', 'test-secret');
 });
 
-it('executes health check successfully', function () {
+it('executes health check successfully', function (): void {
     Http::fake([
         'api.example.com/api/system/health' => Http::response([
             'ok' => true,
@@ -32,7 +32,7 @@ it('executes health check successfully', function () {
         ->and($result->mtlsConfigured)->toBeTrue();
 });
 
-it('returns unhealthy status', function () {
+it('returns unhealthy status', function (): void {
     Http::fake([
         'api.example.com/api/system/health' => Http::response([
             'ok' => false,
@@ -48,14 +48,14 @@ it('returns unhealthy status', function () {
         ->and($result->error)->toBe('Flowin connection failed');
 });
 
-it('throws connection exception on network failure', function () {
+it('throws connection exception on network failure', function (): void {
     Http::fake(fn () => throw new \Illuminate\Http\Client\ConnectionException('Connection refused'));
 
     $action = app(HealthCheckAction::class);
     $action->execute();
 })->throws(ConnectionException::class, 'Could not connect to Peppol Gateway');
 
-it('sends correct headers', function () {
+it('sends correct headers', function (): void {
     Http::fake([
         'api.example.com/api/system/health' => Http::response(['ok' => true, 'status' => 200]),
     ]);
@@ -63,9 +63,7 @@ it('sends correct headers', function () {
     $action = app(HealthCheckAction::class);
     $action->execute();
 
-    Http::assertSent(function ($request) {
-        return $request->hasHeader('X-Api-Client-Id', 'test-client')
-            && $request->hasHeader('Authorization', 'Bearer test-secret')
-            && $request->hasHeader('Accept', 'application/json');
-    });
+    Http::assertSent(fn ($request): bool => $request->hasHeader('X-Api-Client-Id', 'test-client')
+        && $request->hasHeader('Authorization', 'Bearer test-secret')
+        && $request->hasHeader('Accept', 'application/json'));
 });

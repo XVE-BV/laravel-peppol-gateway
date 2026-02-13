@@ -19,7 +19,7 @@ class Config
             throw ConnectionException::missingBaseUrl();
         }
 
-        return rtrim($url, '/');
+        return rtrim((string) $url, '/');
     }
 
     public static function getClientId(): string
@@ -57,7 +57,7 @@ class Config
      */
     public static function getActionClass(string $actionName, string $actionBaseClass): string
     {
-        $actionClass = config("peppol-gateway.actions.{$actionName}") ?? $actionBaseClass;
+        $actionClass = config('peppol-gateway.actions.'.$actionName) ?? $actionBaseClass;
 
         self::ensureValidActionClass($actionName, $actionBaseClass, $actionClass);
 

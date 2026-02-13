@@ -9,13 +9,13 @@ use Xve\LaravelPeppol\Exceptions\ConnectionException;
 use Xve\LaravelPeppol\Exceptions\ValidationException;
 use Xve\LaravelPeppol\Support\Participant;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('peppol-gateway.base_url', 'https://api.example.com');
     config()->set('peppol-gateway.client_id', 'test-client');
     config()->set('peppol-gateway.client_secret', 'test-secret');
 });
 
-it('looks up participant successfully', function () {
+it('looks up participant successfully', function (): void {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
             'data' => [
@@ -39,7 +39,7 @@ it('looks up participant successfully', function () {
         ->and($result->capable)->toBeTrue();
 });
 
-it('sends vat in request body', function () {
+it('sends vat in request body', function (): void {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
             'data' => [
@@ -56,12 +56,10 @@ it('sends vat in request body', function () {
     $action = app(LookupParticipantAction::class);
     $action->execute('BE0123456789');
 
-    Http::assertSent(function ($request) {
-        return $request['vat'] === 'BE0123456789';
-    });
+    Http::assertSent(fn (array $request): bool => $request['vat'] === 'BE0123456789');
 });
 
-it('includes country when provided', function () {
+it('includes country when provided', function (): void {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
             'data' => [
@@ -78,13 +76,11 @@ it('includes country when provided', function () {
     $action = app(LookupParticipantAction::class);
     $action->execute('0123456789', 'BE');
 
-    Http::assertSent(function ($request) {
-        return $request['vat'] === '0123456789'
-            && $request['country'] === 'BE';
-    });
+    Http::assertSent(fn (array $request): bool => $request['vat'] === '0123456789'
+        && $request['country'] === 'BE');
 });
 
-it('includes force refresh when true', function () {
+it('includes force refresh when true', function (): void {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
             'data' => [
@@ -101,12 +97,10 @@ it('includes force refresh when true', function () {
     $action = app(LookupParticipantAction::class);
     $action->execute('BE0123456789', forceRefresh: true);
 
-    Http::assertSent(function ($request) {
-        return $request['force_refresh'] === true;
-    });
+    Http::assertSent(fn (array $request): bool => $request['force_refresh'] === true);
 });
 
-it('throws authentication exception on 401', function () {
+it('throws authentication exception on 401', function (): void {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response(['message' => 'Unauthorized'], 401),
     ]);
@@ -115,7 +109,7 @@ it('throws authentication exception on 401', function () {
     $action->execute('BE0123456789');
 })->throws(AuthenticationException::class, 'Invalid API credentials');
 
-it('throws validation exception on 422', function () {
+it('throws validation exception on 422', function (): void {
     Http::fake([
         'api.example.com/api/peppol/lookup' => Http::response([
             'message' => 'Validation failed',
@@ -127,7 +121,7 @@ it('throws validation exception on 422', function () {
     $action->execute('invalid');
 })->throws(ValidationException::class);
 
-it('throws connection exception on network failure', function () {
+it('throws connection exception on network failure', function (): void {
     Http::fake(fn () => throw new \Illuminate\Http\Client\ConnectionException('Timeout'));
 
     $action = app(LookupParticipantAction::class);

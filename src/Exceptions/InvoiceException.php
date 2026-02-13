@@ -8,11 +8,11 @@ class InvoiceException extends PeppolGatewayException
 {
     public static function notFound(string $id): self
     {
-        return new self("Invoice with ID '{$id}' was not found.");
+        return new self(sprintf("Invoice with ID '%s' was not found.", $id));
     }
 
     public static function sendFailed(string $reason): self
     {
-        return new self("Failed to send invoice: {$reason}");
+        return new self('Failed to send invoice: '.$reason);
     }
 }
