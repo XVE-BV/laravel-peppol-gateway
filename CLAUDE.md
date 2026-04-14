@@ -2,40 +2,13 @@
 
 ## Approach
 
-- Execute first, talk after
-- No preamble, no recap, no "let me", no "I'll now"
-- Skip obvious explanations — say what changed, not why it's good
-- One-line answers when one line suffices
-- Only elaborate when asked or when ambiguity is dangerous
+Execute first. No preamble. One line unless complexity demands more. Say what changed, not why it's good.
 
 ## Delegation
 
-Never explore the codebase manually. Use GitNexus skills for codebase intelligence and graphify for cross-repo questions.
-
-### GitNexus Skills — use for codebase intelligence:
-
-- **`gitnexus-exploring`** — Understand architecture, trace execution flows, find how code works
-- **`gitnexus-debugging`** — Trace bugs, find error sources, follow call chains
-- **`gitnexus-impact-analysis`** — Check what breaks before changing code, find dependents
-- **`gitnexus-refactoring`** — Safe renames, extractions, moves with dependency awareness
-
-### graphify — use for cross-repo questions:
-
-- How data flows between services, inter-repo relationships, system-wide architecture
-- MCP server `graphify-dwb` is always available — query it before grepping raw files
-
-### When to use each tool
-
-| Situation | Tool | Why |
-|-----------|------|-----|
-| "How does X work?" (this repo) | `gitnexus_query()` | Execution flows ranked by relevance |
-| "What breaks if I change X?" | `gitnexus_impact()` | Blast radius: d=1 will break, d=2 likely affected |
-| Any cross-repo question | graphify MCP (`graphify-dwb`) | GitNexus is per-repo — graphify sees all 11 repos |
-| Before Glob/Grep | graphify or `gitnexus_query()` first | Semantic over syntactic — surfaces structure, not just lines |
-| Renaming a symbol | `gitnexus_rename(dry_run:true)` | Find-replace misses dynamic refs; the call graph doesn't |
-| Before committing | `gitnexus_detect_changes()` | Verify only expected symbols changed |
-| Debugging an error | `gitnexus_query("<symptom>")` | Ranked execution flows beat grepping stack traces |
-| Architecture / service overview | graphify → `gitnexus_context()` | graphify for orientation and cross-repo flow; GitNexus for symbol detail |
+No manual exploration. Use:
+- **GitNexus** (per-repo): skills `gitnexus-exploring`, `-debugging`, `-impact-analysis`, `-refactoring`
+- **graphify** (cross-repo): `graphify-dwb` MCP — service data flow, inter-repo architecture
 
 ## Git Rules
 
@@ -62,12 +35,8 @@ composer lint       # Code style
 
 ## graphify
 
-This project has a graphify knowledge graph at graphify-out/.
+Graph at `graphify-out/`. Read `GRAPH_REPORT.md` before architecture questions; use `wiki/index.md` if exists. After edits: `python3 -c "from graphify.watch import _rebuild_code; from pathlib import Path; _rebuild_code(Path('.'))"`.
 
-Rules:
-- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
-- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
-- After modifying code files in this session, run `python3 -c "from graphify.watch import _rebuild_code; from pathlib import Path; _rebuild_code(Path('.'))"` to keep the graph current
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
