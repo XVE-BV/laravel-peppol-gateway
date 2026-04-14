@@ -24,6 +24,19 @@ Never explore the codebase manually. Use GitNexus skills for codebase intelligen
 - How data flows between services, inter-repo relationships, system-wide architecture
 - MCP server `graphify-dwb` is always available — query it before grepping raw files
 
+### When to use each tool
+
+| Situation | Tool | Why |
+|-----------|------|-----|
+| "How does X work?" (this repo) | `gitnexus_query()` | Execution flows ranked by relevance |
+| "What breaks if I change X?" | `gitnexus_impact()` | Blast radius: d=1 will break, d=2 likely affected |
+| Any cross-repo question | graphify MCP (`graphify-dwb`) | GitNexus is per-repo — graphify sees all 11 repos |
+| Before Glob/Grep | graphify or `gitnexus_query()` first | Semantic over syntactic — surfaces structure, not just lines |
+| Renaming a symbol | `gitnexus_rename(dry_run:true)` | Find-replace misses dynamic refs; the call graph doesn't |
+| Before committing | `gitnexus_detect_changes()` | Verify only expected symbols changed |
+| Debugging an error | `gitnexus_query("<symptom>")` | Ranked execution flows beat grepping stack traces |
+| Architecture / service overview | graphify → `gitnexus_context()` | graphify for orientation and cross-repo flow; GitNexus for symbol detail |
+
 ## Git Rules
 
 - **NEVER push `prod` to remote.** `prod` is local-only.
