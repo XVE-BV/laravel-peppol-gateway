@@ -33,3 +33,9 @@ testbench.yaml
 
 # Claude Code
 /.claude
+
+# Claude / GitNexus
+.gitnexus
+.mcp.json
+.claude/settings.local.json
+.DS_Store
