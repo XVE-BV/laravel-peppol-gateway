@@ -1,0 +1,11 @@
+vendor/
+node_modules/
+storage/framework/views/
+public/build/
+public/js/scheduler/
+public/js/jscalendar/
+public/js/*.min.js
+public/js/jquery*.js
+public/uren/
+resources/svg/
+database/migrations/
