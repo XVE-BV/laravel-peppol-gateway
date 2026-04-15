@@ -39,3 +39,6 @@ testbench.yaml
 .mcp.json
 .claude/settings.local.json
 .DS_Store
+
+# graphify knowledge graph output (local only)
+graphify-out/
