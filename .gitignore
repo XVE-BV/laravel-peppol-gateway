@@ -42,3 +42,6 @@ testbench.yaml
 
 # graphify knowledge graph output (local only)
 graphify-out/
+
+# msr-mcp git history index (local only)
+.msr/
