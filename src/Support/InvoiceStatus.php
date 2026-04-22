@@ -30,6 +30,7 @@ class InvoiceStatus
         public readonly ?string $sentAt = null,
         public readonly ?string $acknowledgedAt = null,
         public readonly ?string $deliveredAt = null,
+        /** @var list<array{code: string, message: string}> */
         public readonly array $errors = [],
     ) {}
 
