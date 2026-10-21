@@ -1,10 +1,8 @@
 # Laravel Peppol Gateway
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/xve/laravel-peppol-gateway.svg?style=flat-square)](https://packagist.org/packages/xve/laravel-peppol-gateway)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/xve/laravel-peppol-gateway/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/xve/laravel-peppol-gateway/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/xve/laravel-peppol-gateway.svg?style=flat-square)](https://packagist.org/packages/xve/laravel-peppol-gateway)
+[![Tests](https://img.shields.io/github/actions/workflow/status/XVE-BV/laravel-peppol-gateway/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/XVE-BV/laravel-peppol-gateway/actions/workflows/tests.yml?query=branch%3Amain)
 
-Laravel client package for the Peppol Gateway API. Uses the [Action Pattern](docs/action-pattern.md) for swappable, testable operations. See [Examples](docs/examples.md) for detailed usage.
+Laravel client package for the Peppol Gateway API. Uses the Action Pattern for swappable, testable operations.
 
 ## Installation
 
@@ -21,8 +19,6 @@ PEPPOL_GATEWAY_CLIENT_SECRET=your-client-secret
 ```
 
 ## Usage
-
-See [Examples](docs/examples.md) for detailed usage.
 
 ### Available Actions
 
@@ -48,7 +44,7 @@ All actions dispatch events after successful execution:
 
 ## Customization
 
-Actions can be swapped via config. See [Extending an Action](docs/action-pattern.md#extending-an-action) for details.
+Actions can be swapped via the `actions` key in `config/peppol-gateway.php`.
 
 ## Configuration
 
