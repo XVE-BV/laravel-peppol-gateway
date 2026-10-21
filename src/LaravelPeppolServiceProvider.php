@@ -30,7 +30,7 @@ class LaravelPeppolServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        $stubsPath = dirname(__DIR__).'/stubs';
+        $stubsPath = __DIR__.'/../stubs';
 
         $this->publishes([
             $stubsPath => base_path('stubs/peppol-gateway'),

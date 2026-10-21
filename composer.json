@@ -9,7 +9,7 @@
         "e-invoicing",
         "flowin"
     ],
-    "homepage": "https://github.com/xve/laravel-peppol-gateway",
+    "homepage": "https://github.com/XVE-BV/laravel-peppol-gateway",
     "license": "MIT",
     "authors": [
         {
