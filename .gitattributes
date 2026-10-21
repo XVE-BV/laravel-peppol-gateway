@@ -18,6 +18,5 @@
 /UPGRADING.md       export-ignore
 /phpstan.neon.dist  export-ignore
 /phpstan-baseline.neon  export-ignore
-/CLAUDE.md          export-ignore
 /.graphifyignore    export-ignore
 /rector.php         export-ignore
